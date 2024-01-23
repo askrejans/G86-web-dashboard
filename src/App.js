@@ -1,24 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+// src/App.js
+import React, { useState } from 'react';
+import { CssBaseline, ThemeProvider } from '@mui/material';
+import Menu from './components/Menu';
+import Navbar from './components/Navbar';
+import Dashboard from './components/Dashboard';
+import Settings from './components/Settings';
+import theme from './theme';
 
 function App() {
+  const [isMenuOpen, setMenuOpen] = useState(false);
+  const toggleMenu = () => setMenuOpen(!isMenuOpen);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <div>
+        <Navbar onMenuToggle={toggleMenu} />
+        <Menu open={isMenuOpen} onClose={toggleMenu} />
+        <Dashboard />
+      </div>
+    </ThemeProvider>
   );
 }
 
