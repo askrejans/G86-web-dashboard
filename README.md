@@ -2,6 +2,9 @@
 
 This project serves as a quick and dirty web dashboard in React.js for testing Speeduino/GPS gauges using data from MQTT. It is specifically designed to work with [gps-to-mqtt](https://github.com/askrejans/gps-to-mqtt) and [speeduino-to-mqtt](https://github.com/askrejans/speeduino-to-mqtt) projects.
 
+![image](https://github.com/askrejans/G86-web-dashboard/assets/1042303/9137768f-0491-4753-9233-0c2638458a28)
+
+
 ### How It Works
 
 - **Data Sources:**
