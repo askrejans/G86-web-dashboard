@@ -1,9 +1,10 @@
-// src/App.js
 import React, { useState } from 'react';
 import { CssBaseline, ThemeProvider } from '@mui/material';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Menu from './components/Menu';
 import Navbar from './components/Navbar';
 import Dashboard from './components/Dashboard';
+import SmallDashboard from './components/SmallDashboard';
 import Settings from './components/Settings';
 import theme from './theme';
 
@@ -14,11 +15,17 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <div>
-        <Navbar onMenuToggle={toggleMenu} />
-        <Menu open={isMenuOpen} onClose={toggleMenu} />
-        <Dashboard />
-      </div>
+      <Router>
+        <div>
+          <Navbar onMenuToggle={toggleMenu} />
+          <Menu open={isMenuOpen} onClose={toggleMenu} />
+          <Routes>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/small-dashboard" element={<SmallDashboard />} />
+            <Route path="/settings" element={<Settings />} />
+          </Routes>
+        </div>
+      </Router>
     </ThemeProvider>
   );
 }

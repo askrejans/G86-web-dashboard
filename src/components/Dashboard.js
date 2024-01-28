@@ -142,46 +142,54 @@ const Dashboard = () => {
     }
   };
 
+  const [mqttConfig, setMqttConfig] = useState(null);
+
   useEffect(() => {
-    // Connect to MQTT broker
-    const client = mqtt.connect('http://192.168.88.10:9001');
+    // Fetch MQTT config from external file
+    fetch('/config/mqtt-config.json')
+      .then(response => response.json())
+      .then(config => {
+        // Connect to MQTT broker using the config
+        const client = mqtt.connect(`http://${config.mqtt.ipAddress}:${config.mqtt.port}`);
 
-    client.on('connect', () => {
-      console.log('Connected to MQTT broker');
-      // Subscribe to the topics where your gauge data is published
-      client.subscribe('/GOLF86/ECU/RPM');
-      client.subscribe('/GOLF86/GPS/SPD');
-      client.subscribe('/GOLF86/ECU/O2P');
-      client.subscribe('/GOLF86/ECU/TPS');
-      client.subscribe('/GOLF86/ECU/VE1');
-      client.subscribe('/GOLF86/ECU/BAT');
-      client.subscribe('/GOLF86/ECU/MAP');
-      client.subscribe('/GOLF86/ECU/MAT');
-      client.subscribe('/GOLF86/ECU/CAD');
-      client.subscribe('/GOLF86/ECU/DWL');
-      client.subscribe('/GOLF86/ECU/AFT');
-      client.subscribe('/GOLF86/ECU/PW1');
-      client.subscribe('/GOLF86/ECU/ADV');
-      client.subscribe('/GOLF86/ECU/WEC');
-      client.subscribe('/GOLF86/ECU/ENG');
-    });
+        client.on('connect', () => {
+          console.log('Connected to MQTT broker');
+          // Subscribe to the topics where your gauge data is published
+          client.subscribe('/GOLF86/ECU/RPM');
+          client.subscribe('/GOLF86/GPS/SPD');
+          client.subscribe('/GOLF86/ECU/O2P');
+          client.subscribe('/GOLF86/ECU/TPS');
+          client.subscribe('/GOLF86/ECU/VE1');
+          client.subscribe('/GOLF86/ECU/BAT');
+          client.subscribe('/GOLF86/ECU/MAP');
+          client.subscribe('/GOLF86/ECU/MAT');
+          client.subscribe('/GOLF86/ECU/CAD');
+          client.subscribe('/GOLF86/ECU/DWL');
+          client.subscribe('/GOLF86/ECU/AFT');
+          client.subscribe('/GOLF86/ECU/PW1');
+          client.subscribe('/GOLF86/ECU/ADV');
+          client.subscribe('/GOLF86/ECU/WEC');
+          client.subscribe('/GOLF86/ECU/ENG');
+        })
 
-    client.on('message', (topic, message) => {
-      // Use the corresponding throttled message handler
-      throttledHandlers[topic]?.(message);
-    });
+        client.on('message', (topic, message) => {
+          // Use the corresponding throttled message handler
+          throttledHandlers[topic]?.(message);
+        });
 
-    return () => {
-      // Disconnect from MQTT when the component unmounts
-      client.end();
-    };
-  }, []); // Only run this effect once on component mount
+        return () => {
+          // Disconnect from MQTT when the component unmounts
+          client.end();
+        };
+      })
+      .catch(error => console.error('Error fetching/parsing MQTT config:', error));
+  }, []);
 
   return (
     <Container>
-    <Typography variant="h4" align="center" gutterBottom style={{ color: 'green', textShadow: '0 0 10px #00ff00' }}>
-      Golf MK2 1986
-    </Typography>
+      <Typography variant="h4" align="center" gutterBottom style={{ color: 'green', textShadow: '0 0 10px #00ff00' }}>
+        Golf MK2 1986
+      </Typography>
       <Grid container spacing={2}>
         <Grid item xs={6}>
           <GaugeComponent

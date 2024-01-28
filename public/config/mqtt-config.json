@@ -1,0 +1,7 @@
+{
+    "mqtt": {
+      "ipAddress": "localhost",
+      "port": 9001
+    }
+  }
+  
